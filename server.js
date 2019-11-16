@@ -89,9 +89,7 @@ app.post("/api/reservations", function(req, res) {
 
   //newCharacter.routeName = newCharacter.name.replace(/\s+/g, "").toLowerCase();
 
-  console.log(newReservation);
-
-  if (reservations.length > 5) {
+  if (reservations.length >= 5) {
     waitlist.push(newReservation);
   }
   else {
