@@ -15,46 +15,55 @@ var PORT = process.env.PORT || 3000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-let reservations = [];
-
-// =============================================================
-var tables = [
+let reservations = [
   {
-    //Dont need route name
-    name: "Yoda",
-    role: "Jedi Master",
-    age: 900,
-    forcePoints: 2000
-  },
+  name: "first guy",
+  phone: "555-555-5555",
+  email: "1st@test.com",
+  uniqueID: "first table"
+},
+{
+  name: "test guy",
+  phone: "555-555-5555",
+  email: "1st@test.com",
+  uniqueID: "test table"
+},
 ];
 
-// Routes
+let waitlist = [
+  {
+    name: "waitlisted guy",
+    phone: "444-444-4444",
+    email: "wait@test.com",
+    uniqueID: "waitlisted table"
+  }
+];
+
 // =============================================================
 
-// Basic route that sends the user first to the AJAX Page
+ 
 app.get("/", function(req, res) {
     //homepage
-  res.sendFile(path.join(__dirname, "TBD.html"));
+  res.sendFile(path.join(__dirname, "home.html"));
 });
 
-// Display webpage for table list
+// Display webpage for table list.  this is a get, and we're also going to do a get within the html file itself for getting the table data
 app.get("/tables", function(req, res) {
 
   res.sendFile(path.join(__dirname, "TBD.html"));
 });
 // Display page for making a reservation
 app.get("/reserve", function(req, res) {
-
-    res.sendFile(path.join(__dirname, "TBD.html"));
+    res.sendFile(path.join(__dirname, "reserve.html"));
   });
 
-// Displays JSON for tables
-app.get("/api/tables", function(req, res) {
-  return res.json();
-});
 // Displays JSON for reservations
+app.get("/api/tables", function(req, res) {
+  return res.json(reservations);
+});
+// Displays JSON for waitlist
 app.get("/api/waitlist", function(req, res) {
-    return res.json();
+    return res.json(waitlist);
   });
 
 // We don't have a search function
@@ -74,7 +83,7 @@ app.get("/api/waitlist", function(req, res) {
 // });
 
 // Create New Characters - takes in JSON input
-app.post("/reserve", function(req, res) {
+app.post("/api/reservations", function(req, res) {
 
   var newReservation = req.body;
 
@@ -82,7 +91,12 @@ app.post("/reserve", function(req, res) {
 
   console.log(newReservation);
 
-  reservations.push(newReservation);
+  if (reservations.length > 5) {
+    waitlist.push(newReservation);
+  }
+  else {
+    reservations.push(newReservation);
+  }
 
   res.json(newReservation);
 });
